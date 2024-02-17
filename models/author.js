@@ -1,7 +1,33 @@
 const mongoose = require('mongoose');
 
-const authorSchema = mongoose.Schema({
-
+const authorsSchema = new mongoose.Schema({
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  photo: {
+    type: String,
+  },
+  dateOfBirth: {
+    type: Date,
+  },
+  books: [{
+    type: Number,
+    ref: 'Books',
+  }],
 });
 
-module.export = authorSchema;
+authorsSchema.pre('findOneAndUpdate', function foau(next) {
+  this.options.runValidators = true;
+  next();
+});
+
+const Authors = mongoose.model('Authors', authorsSchema);
+
+module.exports = {
+  Authors,
+};
