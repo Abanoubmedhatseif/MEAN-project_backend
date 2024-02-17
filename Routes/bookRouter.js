@@ -15,7 +15,7 @@ router.get('/:id', async(req, res, next)=>{
 
 router.post('/', async(req, res, next)=>{
     await bookService.createBook(req.body)
-        .then(() => res.status(200).json({"Message" : "Done", "Data": req.body}))
+        .then((createdBook) => createdBook ? res.status(200).json({"Message" : "Done", "Data": createdBook}) : res.status(404).send({"Message": "Error just occured"}))
         .catch((err) => next(err))
 })
 
@@ -28,10 +28,16 @@ router.put('/:id', async(req, res, next)=>{
 
 router.delete('/:id', async(req, res, next)=>{
     await bookService.deleteBook(req.params.id)
-        .then((isDeleted) => isDeleted ? res.status(200).json({"Message" : "Done | Deleted"}) : res.status(404).send({"Message": "No data"}) )
-        // .then((book) => (book) ? res.status(200).json({"Message" : "Done | Deleted"}) :  res.status(404).send({"Message": "No data"}))
+        .then((deleted) => deleted ? res.status(200).json({"Message" : "Done | Deleted" ,"Data": deleted}) : res.status(404).send({"Message": "No data"}) )
         .catch((err) => next(err))
 })
+
+router.put('/rate/:id', async(req, res, next)=>{
+    await bookService.updateBookRates({id: req.params.id, data: req.body})
+        .then((book) => (book) ? res.status(200).json({"Message" : "Done", "Data": book}) :  res.status(404).send({"Message": "No data"}))
+        .catch((err) => next(err))
+})
+
 
 
 module.exports = router

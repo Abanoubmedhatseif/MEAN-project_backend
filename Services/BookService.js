@@ -18,6 +18,17 @@ const updateBook = async (idAndData) => {
 }
 
 
+const updateBookRates = async (idAndData) => {
+    const {id, data} = idAndData;
+    return await Book.findById(id).then( (book) => {
+        if (!book) return null
+        const targetBookRatings = book.rating;
+        targetBookRatings.push(data)
+        return book.save()
+    })
+    .catch(err => err)
+}
+
 const deleteBook = async (id) => {
     return await Book.findByIdAndDelete(id)
 }
@@ -28,5 +39,6 @@ module.exports = {
     getOneBook,
     createBook,
     updateBook,
+    updateBookRates,
     deleteBook
 }

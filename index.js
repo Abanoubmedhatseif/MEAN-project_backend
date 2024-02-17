@@ -1,4 +1,4 @@
-const URI = require('./dbCreds');
+const URI = require('./db-creds');
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
