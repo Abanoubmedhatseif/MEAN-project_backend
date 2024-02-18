@@ -1,32 +1,31 @@
-const URI = require('./db-creds');
 const express = require('express');
+const dotenv = require('dotenv');
 const mongoose = require('mongoose');
-const app = express();
-const GlobalErrorHandler = require('./_helpers/GlobalErrorHanlder')
+const helmet = require('helmet');
+const routes = require('./routers');
 
-const categoryRouter = require('./Routes/categoryRouter')
-const authorRouter = require('./Routes/authorRouter')
-const bookRouter = require('./Routes/bookRouter')
+dotenv.config({ path: './config.env' });
+const app = express();
+
+const PORT = process.env.PORT || 3000;
 
 // DB CONNECTION
-mongoose.connect(URI, {
-  useNewUrlParser: true,
+mongoose
+  .connect(process.env.DB_REMOTE, {
+    useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
-  })  //.then(() => console.log('the connection done with database'));
-  
+  })
+  .then(() => console.log('the connection done with database'));
+
 // MIDDLEWARE TO USE req.body
 app.use(express.json());
+app.use(helmet());
 
+// ROUTES
+app.use(routes);
 
-// The routes
-app.use('/categories', categoryRouter)
-app.use('/authors', authorRouter)
-app.use('/books', bookRouter)
-
-app.use(GlobalErrorHandler)
-
-app.listen((3000), () => {
-    console.log("the server running on port 3000");
-})
+app.listen(PORT, () => {
+  console.log(`the server running on port ${PORT}`);
+});

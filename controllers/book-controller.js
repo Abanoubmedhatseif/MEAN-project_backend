@@ -1,4 +1,4 @@
-const Book = require('../Models/Book')
+const Book = require('../models/book')
 
 const getAllBooks = async () => {
     return await Book.find({});
@@ -20,7 +20,8 @@ const updateBook = async (idAndData) => {
 
 const updateBookRates = async (idAndData) => {
     const {id, data} = idAndData;
-    return await Book.findById(id).then( (book) => {
+    return await Book.findById(id)
+    .then( (book) => {
         if (!book) return null
         const targetBookRatings = book.rating;
         targetBookRatings.push(data)

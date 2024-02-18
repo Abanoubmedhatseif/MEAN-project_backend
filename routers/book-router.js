@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const bookService = require('../Services/BookService')
+const bookService = require('../controllers/book-controller')
 
 router.get('/', async(req, res, next)=>{
     await bookService.getAllBooks()

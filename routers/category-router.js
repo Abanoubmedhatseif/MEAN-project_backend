@@ -1,14 +1,14 @@
 const router = require('express').Router()
-const authorService = require('../Services/AuthorService')
+const categoryService = require('../controllers/category-controller')
 
 router.get('/', async(req, res, next)=>{
-    await authorService.getAllAuthors()
-        .then((authors) => res.status(200).json(authors))
+    await categoryService.getAllCategories()
+        .then((categories) => res.status(200).json(categories))
         .catch((err) => next(err))
 })
 
 router.post('/', async(req, res, next)=>{
-    await authorService.createAuthor(req.body)
+    await categoryService.createCategory(req.body)
         .then(() => res.status(200).json({"Message" : "Done", "Data": req.body}))
         .catch((err) => next(err))
 })
