@@ -1,13 +1,12 @@
-const mongoose = require('mongoose'),
-        Schema = mongoose.Schema,
-        autoIncrement = require('mongoose-auto-increment')
+const mongoose = require("mongoose");
 
-const RatingSchema = new Schema({
+const autoIncrement = require("mongoose-auto-increment");
 
-  userId: {     
+const RatingSchema = new mongoose.Schema({
+  userId: {
     type: Number,
     required: true,
-    default: ''
+    default: "",
     // ref: 'User'
     // unique: true
   },
@@ -17,47 +16,42 @@ const RatingSchema = new Schema({
     required: true,
     minLength: 1,
     maxLength: 5,
-    default: 0
-  }
-  
-})
+    default: 0,
+  },
+});
 
-const BookSchema = new Schema({
+const BookSchema = new mongoose.Schema({
+  photo: String,
 
-    photo: String,
+  bookName: {
+    type: String,
+    required: true,
+  },
 
-    bookName: {
-        type: String,
-        required: true
-    },
+  categoryId: {
+    type: Number,
+    required: true,
+    ref: "Category",
+  },
 
-    categoryId: {
-        type: Number,
-        required: true,
-        ref: 'Category'
-      },
+  authorId: {
+    type: Number,
+    required: true,
+    ref: "Author",
+  },
 
-    authorId:  {
-        type: Number,
-        required: true,
-        ref: 'Author'
-      },
-
-    rating: [ RatingSchema ]
-
-})
-
+  rating: [RatingSchema],
+});
 
 autoIncrement.initialize(mongoose.connection);
 
 BookSchema.plugin(autoIncrement.plugin, {
-    model: 'Book',
-    field: '_id',
-    startAt: 1,
-    incrementBy:1
-})
+  model: "Book",
+  field: "_id",
+  startAt: 1,
+  incrementBy: 1,
+});
 
-
-const Book = mongoose.model("BookModel", BookSchema, "books")
+const Book = mongoose.model("BookModel", BookSchema, "books");
 
 module.exports = Book;
