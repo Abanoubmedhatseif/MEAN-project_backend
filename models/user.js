@@ -6,6 +6,7 @@ const bookSchema = new mongoose.Schema({
   },
   shelve: {
     type: String,
+    default: 'want to read',
     enum: ['read', 'reading', 'want to read'],
   },
   rate: {
