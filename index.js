@@ -11,7 +11,14 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // DB CONNECTION
-mongoose.connect(process.env.DB_LOCAL).then(() => console.log('the connection done with database'));
+mongoose
+  .connect(process.env.DB_REMOTE, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  })
+  .then(() => console.log('the connection done with database'));
 
 // MIDDLEWARE TO USE req.body
 app.use(express.json());
@@ -20,6 +27,6 @@ app.use(helmet());
 // ROUTES
 app.use(routes);
 
-app.listen((PORT), () => {
+app.listen(PORT, () => {
   console.log(`the server running on port ${PORT}`);
 });

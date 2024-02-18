@@ -1,4 +1,4 @@
-const { Authors } = require('../models/author');
+const { Authors } = require("../models/author");
 
 const getAuthors = async (req, res) => {
   try {
@@ -29,7 +29,11 @@ const postAuthors = async (req, res) => {
 
 const updateAuthor = async (req, res) => {
   try {
-    const newAuthor = await Authors.findOneAndUpdate({ _id: req.params.authorid }, req.body, { returnDocument: 'after' });
+    const newAuthor = await Authors.findOneAndUpdate(
+      { _id: req.params.authorid },
+      req.body,
+      { returnDocument: "after" }
+    );
     res.json(newAuthor);
   } catch (err) {
     res.status(400).json(err);
@@ -38,7 +42,9 @@ const updateAuthor = async (req, res) => {
 
 const deleteAuthor = async (req, res) => {
   try {
-    const delAuthor = await Authors.findOneAndDelete({ _id: req.params.authorid });
+    const delAuthor = await Authors.findOneAndDelete({
+      _id: req.params.authorid,
+    });
     res.json(delAuthor);
   } catch (err) {
     res.status(400).json(err);
