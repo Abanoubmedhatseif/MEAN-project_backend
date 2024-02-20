@@ -11,12 +11,13 @@ const authorsSchema = new mongoose.Schema({
   },
   photo: {
     type: String,
+    default: 'default',
   },
   dateOfBirth: {
     type: Date,
   },
   books: [{
-    type: Number,
+    type: mongoose.Schema.ObjectId,
     ref: 'Books',
   }],
 });
