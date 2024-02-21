@@ -15,24 +15,24 @@ const bookSchema = new mongoose.Schema({
     min: 1,
     max: 5,
   },
+  userReview: {
+    type: String,
+    required: false,
+  },
 });
 
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: [true, 'you must add your firstName'],
   },
   lastName: {
     type: String,
-    required: [true, 'you must add your lastName'],
   },
   userName: {
     type: String,
-    required: [true, 'you must add your userName'],
   },
   password: {
     type: String,
-    required: [true, 'you must add your password'],
   },
   books: [bookSchema],
 });
