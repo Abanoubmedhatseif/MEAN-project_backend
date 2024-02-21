@@ -15,12 +15,9 @@ const createAdminAccount = async (req, res) => {
 
     const savedAdminAccount = await admin.save();
 
-    const token = jwt.sign({ adminId: savedAdminAccount._id }, 'myRandomKey');
-
     res.status(201).json({
       message: 'Admin account created successfully',
       admin: savedAdminAccount,
-      token,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -57,4 +54,54 @@ const loginAdmin = async (req, res) => {
   }
 };
 
-module.exports = { createAdminAccount, loginAdmin };
+
+const updateCredentials = async (req, res) => {
+  try {
+    const adminId = req.params.id;
+    const { username, password } = req.body;
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return res.status(401).json({ error: 'cant find Admin account' });
+    }
+    
+    if (username) {
+      admin.userName = username;
+    }
+    
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      admin.password = hashedPassword;
+    }
+    
+    const updatedAdminAccount = await admin.save();
+    res.status(201).json({
+      message: 'Credentials changed successfully',
+      admin: updatedAdminAccount,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+const deleteAdmin = async (req, res) => {
+  try {
+    const adminId = req.params.id;
+    const deletedAdmin = await Admin.findByIdAndDelete(adminId);
+    if (!deletedAdmin) {
+      return res.status(401).json({ error: 'cant find Admin account' });
+    }
+    
+    res.status(200).json({
+      message: 'Admin account deleted successfully',
+      admin: deletedAdmin,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+
+module.exports = { createAdminAccount, loginAdmin , updateCredentials ,deleteAdmin };
