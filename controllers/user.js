@@ -80,7 +80,7 @@ exports.addBook = async (req, res) => {
   }
 };
 
-exports.getBooks = async (req, res) => {
+exports.getuserBooks = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('books');
     if (!user) {
