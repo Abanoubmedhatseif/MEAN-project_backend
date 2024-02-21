@@ -22,6 +22,10 @@ app.use(helmet());
 // ROUTES
 app.use(routes);
 
+app.use("*", (req, res) => {
+  res.status(404).json({ Error: "Error 404 not found" });
+});
+
 app.listen(PORT, () => {
   console.log(`the server running on port ${PORT}`);
 });

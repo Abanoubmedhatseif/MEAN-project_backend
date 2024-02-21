@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const adminSchema = new mongoose.Schema(
   {
-    userName: { type: String, required: true, unique: true, minlength: 3, maxlength: 12},
+    userName: { type: String, required: true, unique: true, minlength: 3, maxlength: 15},
     password: { type: String, required: true, minlength: 8 },
   }
 );
