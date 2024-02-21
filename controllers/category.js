@@ -1,4 +1,4 @@
-const Category = require("../models/category");
+const Category = require("../Models/category");
 
 const createCategory = async (req, res) => {
   try {
@@ -24,7 +24,9 @@ const getCategoryById = async (req, res) => {
     const category = await Category.findById(categoryId);
 
     if (!category) {
-      return res.status(404).json({ userMessage: 'Sorry !!, A category with this ID was not found'});
+      res.status(404).json({
+        userMessage: "Sorry !!, A category with this ID was not found",
+      });
     }
     res.status(200).json(category);
   } catch (error) {
@@ -38,15 +40,17 @@ const deleteCategoryById = async (req, res) => {
     const deletedCategory = await Category.findByIdAndDelete(categoryId);
 
     if (!deletedCategory) {
-      return res.status(404).json({ error: 'Sorry !!, A category with this ID was not found' });
+      res
+        .status(404)
+        .json({ error: "Sorry !!, A category with this ID was not found" });
     }
-    res.status(200).json({ message: 'Category deleted successfully', deletedCategory });
+    res
+      .status(200)
+      .json({ message: "Category deleted successfully", deletedCategory });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
-
 
 const updateCategoryById = async (req, res) => {
   try {
@@ -55,19 +59,19 @@ const updateCategoryById = async (req, res) => {
     const updatedCategory = await Category.findByIdAndUpdate(
       categoryId,
       { categoryName: newCategoryName },
-      { new: true } // Return the updated document
+      { new: true }, // Return the updated document
     );
     if (!updatedCategory) {
-      return res.status(404).json({ error: 'Category not found' });
+      res.status(404).json({ error: "Category not found" });
     }
 
-    res.status(200).json({ message: 'Category updated successfully', updatedCategory });
+    res
+      .status(200)
+      .json({ message: "Category updated successfully", updatedCategory });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
-
-
+};
 
 // const updateCategoryById = async (req, res) => {
 //   try {
@@ -76,7 +80,7 @@ const updateCategoryById = async (req, res) => {
 
 //     if (!categoryName) {
 //       return res.status(404).json({ error: 'Invalid category name' });
-//     } 
+//     }
 
 //     const updatedCategory =  await Category.findOneAndUpdate(
 //       { categoryId: categoryId },
@@ -94,18 +98,10 @@ const updateCategoryById = async (req, res) => {
 //   }
 // };
 
-
-
-
-
-
-
-
-
 module.exports = {
   getAllCategories,
   createCategory,
   getCategoryById,
   deleteCategoryById,
-  updateCategoryById
-}
+  updateCategoryById,
+};

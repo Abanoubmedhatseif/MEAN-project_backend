@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const authorsSchema = new mongoose.Schema({
   firstName: {
@@ -11,19 +11,19 @@ const authorsSchema = new mongoose.Schema({
   },
   photo: {
     type: String,
-    default: 'default',
+    default: "default",
   },
   dateOfBirth: {
     type: Date,
   },
 });
 
-authorsSchema.pre('findOneAndUpdate', function foau(next) {
+authorsSchema.pre("findOneAndUpdate", function foau(next) {
   this.options.runValidators = true;
   next();
 });
 
-const Authors = mongoose.model('Authors', authorsSchema);
+const Authors = mongoose.model("Authors", authorsSchema);
 
 module.exports = {
   Authors,

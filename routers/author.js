@@ -1,14 +1,13 @@
-const router = require('express').Router();
-const { AuthorController } = require('../controllers');
+const router = require("express").Router();
+const { AuthorController } = require("../controllers");
 
-router.get('/', AuthorController.getAuthors);
+router
+  .get("/", AuthorController.getAuthors)
+  .post("/", AuthorController.postAuthors);
 
-router.get('/:authorid', AuthorController.getAuthor);
-
-router.post('/', AuthorController.postAuthors);
-
-router.patch('/:authorid', AuthorController.updateAuthor);
-
-router.delete('/:authorid', AuthorController.deleteAuthor);
+router
+  .get("/:authorid", AuthorController.getAuthor)
+  .patch("/:authorid", AuthorController.updateAuthor)
+  .delete("/:authorid", AuthorController.deleteAuthor);
 
 module.exports = router;
