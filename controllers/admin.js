@@ -20,7 +20,7 @@ const createAdminAccount = async (req, res) => {
       admin: savedAdminAccount,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ errorMessage: error.message });
   }
 };
 
@@ -52,14 +52,14 @@ const loginAdmin = async (req, res) => {
       token,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ errorMessage: error.message });
   }
 };
 
 const updateCredentials = async (req, res) => {
   try {
     const adminId = req.params.id;
-    const { username, password } = req.body;
+    const { userName, password } = req.body;
     const admin = await Admin.findById(adminId);
     if (!admin) {
       res.status(401).json({ error: "cant find Admin account" });
@@ -80,7 +80,7 @@ const updateCredentials = async (req, res) => {
       admin: updatedAdminAccount,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ errorMessage: error.message });
   }
 };
 
@@ -97,7 +97,7 @@ const deleteAdmin = async (req, res) => {
       admin: deletedAdmin,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ errorMessage: error.message });
   }
 };
 
