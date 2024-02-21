@@ -16,10 +16,6 @@ const authorsSchema = new mongoose.Schema({
   dateOfBirth: {
     type: Date,
   },
-  books: [{
-    type: mongoose.Schema.ObjectId,
-    ref: 'Books',
-  }],
 });
 
 authorsSchema.pre('findOneAndUpdate', function foau(next) {
