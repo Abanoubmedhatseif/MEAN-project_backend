@@ -1,4 +1,4 @@
-const Category = require("../Models/category");
+const Category = require('../models/category');
 
 const createCategory = async (req, res) => {
   try {
@@ -24,9 +24,7 @@ const getCategoryById = async (req, res) => {
     const category = await Category.findById(categoryId);
 
     if (!category) {
-      res.status(404).json({
-        userMessage: "Sorry !!, A category with this ID was not found",
-      });
+      return res.status(404).json({ errorMessage: 'Sorry !!, A category with this ID was not found' });
     }
     res.status(200).json(category);
   } catch (error) {
@@ -40,13 +38,9 @@ const deleteCategoryById = async (req, res) => {
     const deletedCategory = await Category.findByIdAndDelete(categoryId);
 
     if (!deletedCategory) {
-      res
-        .status(404)
-        .json({ error: "Sorry !!, A category with this ID was not found" });
+      return res.status(404).json({ errorMessage: 'Sorry !!, A category with this ID was not found' });
     }
-    res
-      .status(200)
-      .json({ message: "Category deleted successfully", deletedCategory });
+    res.status(200).json({ successMessage: 'Category deleted successfully', deletedCategory });
   } catch (error) {
     res.status(500).json({ errorMessage: error.message });
   }
@@ -62,12 +56,10 @@ const updateCategoryById = async (req, res) => {
       { new: true }, // Return the updated document
     );
     if (!updatedCategory) {
-      res.status(404).json({ error: "Category not found" });
+      return res.status(404).json({ errorMessage: 'Category not found' });
     }
 
-    res
-      .status(200)
-      .json({ message: "Category updated successfully", updatedCategory });
+    res.status(200).json({ successMessage: 'Category updated successfully', updatedCategory });
   } catch (error) {
     res.status(500).json({ errorMessage: error.message });
   }
