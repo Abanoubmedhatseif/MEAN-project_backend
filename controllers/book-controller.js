@@ -1,4 +1,4 @@
-const Book = require('../models/Book');
+const Book = require("../Models/book");
 
 const getAllBooks = async () => Book.find({});
 
@@ -8,28 +8,13 @@ const createBook = async (data) => Book.create(data);
 
 const updateBook = async (idAndData) => {
   const { id, data } = idAndData;
-  await Book.findOneAndUpdate(
-    { _id: id },
-    data,
-    { new: true },
-    (error, doc) => (err) => (err ? error : doc),
-  );
-};
-
-const updateBookRates = async (idAndData) => {
-  const { id, data } = idAndData;
-  await Book.findById(id)
-    .then((book) => {
-      if (!book) return null;
-      const targetBookRatings = book.rating;
-      targetBookRatings.push(data);
-      return book.save();
-    })
-    .catch((err) => err);
+  const book = await Book.findOneAndUpdate({ _id: id }, data, { new: true });
+  return book;
 };
 
 const deleteBook = async (id) => {
-  await Book.findByIdAndDelete(id);
+  const deletedBook = await Book.findByIdAndDelete(id);
+  return deletedBook;
 };
 
 module.exports = {
@@ -37,6 +22,5 @@ module.exports = {
   getOneBook,
   createBook,
   updateBook,
-  updateBookRates,
   deleteBook,
 };
