@@ -1,5 +1,28 @@
 const router = require("express").Router();
-const bookController = require("../controllers/book-controller");
+const bookController = require("../controllers/book");
+
+const multer = require('multer')
+const path = require('path')
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'Images')
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname))
+  }
+})
+
+const upload = multer({ storage })
+
+router.get("/upload", (req, res) => {
+  res.render("form");
+})
+
+// image is same as input name in the view file
+router.post("/upload", upload.single("image"), (req, res) => {
+  res.json("image uploaded");
+})
 
 router.get("/", async (req, res, next) => {
   await bookController
@@ -33,6 +56,7 @@ router.post("/", async (req, res, next) => {
     )
     .catch((err) => next(err));
 });
+
 
 router.put("/:id", async (req, res, next) => {
   await bookController
