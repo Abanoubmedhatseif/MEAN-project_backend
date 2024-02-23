@@ -2,106 +2,95 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../Models/user");
 const Book = require("../Models/book");
+const { error } = require("console");
+const verifyToken = require("../middleware/verify-token");
 
 exports.Register = async (req, res) => {
   try {
     const { firstName, lastName, userName, password } = req.body;
     const salt = await bcrypt.genSalt(10);
     const hashedpassword = await bcrypt.hash(password, salt);
-    const newUser = {
-      firstName,
-      lastName,
-      userName,
-      password: hashedpassword,
-    };
-    const newuser = await User.create(newUser);
-    res.status(201).json({
-      successMessage: "the user created successfully",
-      newuser,
-    });
-  } catch (error) {
-    res.status(500).json({
-      errorMessage: "error occured",
-    });
-  }
-};
 
-exports.login = async (req, res) => {
-  try {
-    const user = await User.findOne({ userName: req.body.userName });
-
-    if (!user) {
-      res.status(400).json({
-        errorMessage: "username is not fount ...",
-      });
-    }
-
-    const ismatch = await bcrypt.compare(req.body.password, user.password);
-    if (!ismatch) {
-      res.status(400).json({
-        errorMessage: "password is incorrect....",
-      });
-    }
-    const payload = {
-      user: {
-        // eslint-disable-next-line no-underscore-dangle
-        _id: user._id,
-      },
-    };
-    jwt.sign(payload, "asbfdngdfedcfsa", { expiresIn: "7h" }, (err, token) => {
-      if (err) {
-        console.log("jwt error = ", err);
-      }
-
+    if (
+      req.body.retypePassword &&
+      req.body.retypePassword === req.body.password
+    ) {
+      const newUser = {
+        firstName,
+        lastName,
+        userName,
+        password: hashedpassword,
+      };
+      const newuser = await User.create(newUser);
       res.status(201).json({
-        token,
+        successMessage: "the user created successfully",
+        newuser,
       });
-    });
-  } catch (error) {
-    console.log("signup controller error : ", error);
-    res.status(500).json({
-      errorMessage: "error occured",
-    });
-  }
-};
-
-exports.addBook = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    user.books.push(req.body);
-    user.save();
-    res.status(200).json({
-      user,
-    });
-  } catch (error) {
-    res.status(500).json({
-      errorMessage: "error occured",
-    });
-  }
-};
-
-exports.getAllBooks = async (req, res) => {
-  try {
-    const books = await Book.find({});
-
-    const numberOfBooks = books.length;
-    if (numberOfBooks === 0) {
-      return res.status(200).json({
-        successMessage: "there's no book added yet",
+    } else {
+      res.status(500).json({
+        errorMessage: "Password must be confirmed and matched",
       });
     }
-    return res.status(200).json({
-      "number of books": numberOfBooks,
-      "the books": books,
-    });
   } catch (error) {
-    return res.status(500).json({
-      errorMessage: "error occured",
+    res.status(500).json({
+      errorMessage:
+        "error occured | check your data | username is already taken",
     });
   }
 };
 
-exports.getuserBooks = async (req, res) => {
+exports.login = async (req, res, next) => {
+  try {
+    const user    = await User.findOne({ userName: req.body.userName });
+    if (!user) throw new Error("Username or password is incorrect!")
+    const matched = await bcrypt.compare(req.body.password, user.password);
+  
+  if (!matched) throw new Error("Username or password is incorrect!")
+    else {
+      const payload = {
+          _id: user._id
+      };
+      jwt.sign(payload, "asbfdngdfedcfsa", { expiresIn: "7h" }, (err, token) => {
+        err
+          ? res.status(500).json({ message: "error of jwt" })
+          : res.status(200).json({ user: user, token: token });
+      });
+    }
+    
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.addBook = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.body._id);
+    const newBook = user.books.find(book => book.book._id == req.params.id ?? book.book);
+    if(!newBook) throw new Error("Already added book!, choose another!")
+
+    const book = await Book.findById(req.params.id);
+    user.books.push({
+      book: book,
+      rate: 0
+    });
+    user.save();
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getUserOneBook = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.body._id);
+    const targetBook = user.books.find(book => book.book._id == req.params.id ?? book.book);
+    res.status(200).json(targetBook);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getUserBooks = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("books");
     if (!user) {
@@ -126,6 +115,38 @@ exports.getuserBooks = async (req, res) => {
   }
 };
 
+exports.getAllBooks = async (req, res) => {
+  try {
+
+    const page = req.query.page || 0;
+    const booksPerPage = 8;
+
+    const books = await Book.find({})
+        .sort()
+        .skip(page * booksPerPage)
+        .limit(booksPerPage);
+
+        const numberOfBooks = books.length;
+
+    if (numberOfBooks === 0) {
+      return res.status(200).json({  
+         successMessage: "there's no book added yet",
+      });
+    }
+    return res.status(200).json({
+      "Number of books": numberOfBooks,
+      "The books": books,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      errorMessage: "error occured",
+    });
+  }
+};
+
+
+
 exports.updateBookShelve = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -141,7 +162,7 @@ exports.updateBookShelve = async (req, res) => {
     }
 
     const bookIndex = user.books.findIndex(
-      (book) => book.bookId.toString() === bookId,
+      (book) => book.bookId.toString() === bookId
     );
     if (bookIndex === -1) {
       return res.status(404).json({
@@ -178,7 +199,7 @@ exports.updateBookRate = async (req, res) => {
     }
 
     const bookIndex = user.books.findIndex(
-      (book) => book.bookId.toString() === bookId,
+      (book) => book.bookId.toString() === bookId
     );
     if (bookIndex === -1) {
       return res.status(404).json({
@@ -215,7 +236,7 @@ exports.addBookReview = async (req, res) => {
     }
 
     const bookIndex = user.books.findIndex(
-      (book) => book.bookId.toString() === bookId,
+      (book) => book.bookId.toString() === bookId
     );
     if (bookIndex === -1) {
       return res.status(404).json({

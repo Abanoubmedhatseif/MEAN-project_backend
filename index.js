@@ -1,14 +1,13 @@
 /* eslint-disable import/no-unresolved */
-const cors = require('cors');
 const express = require('express');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
+const cors = require('cors');
 const routes = require('./routers');
 
 dotenv.config({ path: './config.env' });
 const app = express();
-
 app.use(cors());
 
 const PORT = process.env.PORT || 3000;
@@ -16,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 // DB CONNECTION
 mongoose.connect(process.env.DB_LOCAL);
 
-// .then(() => console.log(process.env.DB_LOCAL));
+app.set('view engine', 'ejs');
 
 // MIDDLEWARE TO USE req.body
 app.use(express.json());
@@ -24,6 +23,11 @@ app.use(helmet());
 
 // ROUTES
 app.use(routes);
+
+// Middleware | Global Error Handler
+app.use((err, req, res, next) => {
+  res.status(500).json({ Error: err.message });
+});
 
 app.use('*', (req, res) => {
   res.status(404).json({ Error: 'No route defined for this :(' });
