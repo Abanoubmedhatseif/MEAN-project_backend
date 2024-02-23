@@ -1,12 +1,15 @@
 /* eslint-disable import/no-unresolved */
-const express = require("express");
-const dotenv = require("dotenv");
-const mongoose = require("mongoose");
-const helmet = require("helmet");
-const routes = require("./routers");
+const cors = require('cors');
+const express = require('express');
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+const helmet = require('helmet');
+const routes = require('./routers');
 
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: './config.env' });
 const app = express();
+
+app.use(cors());
 
 const PORT = process.env.PORT || 3000;
 
@@ -22,8 +25,8 @@ app.use(helmet());
 // ROUTES
 app.use(routes);
 
-app.use("*", (req, res) => {
-  res.status(404).json({ Error: "No route defined for this :(" });
+app.use('*', (req, res) => {
+  res.status(404).json({ Error: 'No route defined for this :(' });
 });
 
 app.listen(PORT, () => {
