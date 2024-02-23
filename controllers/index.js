@@ -4,5 +4,5 @@ module.exports = {
   CategoryController: require("./category"),
   userController: require("./user"),
   AdminController: require("./admin"),
-  BookController: require("./book-controller"),
+  BookController: require("./book"),
 };

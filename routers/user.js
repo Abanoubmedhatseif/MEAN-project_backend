@@ -1,14 +1,19 @@
 const userRouter = require("express").Router();
+
+const verifyToken = require("../middleware/verify-token");
+
 const {
   userRegisterValidation,
   userLoginValidation,
   validationresult,
   userBookReview,
 } = require("../middleware/user-validation");
+
 const {
   Register,
   addBook,
-  getuserBooks,
+  getUserOneBook,
+  getUserBooks,
   updateBookShelve,
   login,
   updateBookRate,
@@ -16,23 +21,23 @@ const {
   addBookReview,
 } = require("../controllers/user");
 
-userRouter.get("/", getAllBooks);
-userRouter.post(
-  "/register",
-  userRegisterValidation,
-  validationresult,
-  Register,
-);
+
+userRouter.post("/register", userRegisterValidation, validationresult, Register);
 userRouter.post("/login", userLoginValidation, validationresult, login);
-userRouter.get("/books/:id", getuserBooks);
-userRouter.post("/books/:id", addBook);
+
+// Not Protected for non-registered users
+userRouter.get("/", getAllBooks);
+userRouter.get("/books/:id", getUserOneBook);
+
+// Protected for registered users only
+userRouter.get("/books", verifyToken, getUserBooks);
+userRouter.post("/books/:id", verifyToken, addBook);
+
+
+
+
 userRouter.patch("/updateShelve/:id", updateBookShelve);
-userRouter.patch("/updateRate/:id", updateBookRate);
-userRouter.post(
-  "/addReview/:id",
-  userBookReview,
-  validationresult,
-  addBookReview,
-);
+// userRouter.patch("/updateRate/:id", updateBookRate);
+userRouter.post("/addReview/:id", userBookReview, validationresult, addBookReview);
 
 module.exports = userRouter;

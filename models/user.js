@@ -20,40 +20,56 @@ const bookSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema({
   firstName: {
+    required: true,
     type: String,
   },
   lastName: {
+    required: true,
     type: String,
   },
   userName: {
+    required: true,
+    unique: true,
     type: String,
   },
   password: {
+    required: true,
     type: String,
   },
   books: [
     {
       book: {
         type: bookSchema,
+        unique: true,
       },
 
       rate: {
         type: Number,
         default: 0,
-        min: 1,
         max: 5,
       },
       review: {
         type: String,
+        default: "N/A"
       },
       shelve: {
         type: String,
-        default: "--N/A--",
+        default: "want to read",
         enum: ["read", "reading", "want to read"],
       },
     },
   ],
-});
+},
+{
+  toJSON: {
+    transform: (doc, ret) => {
+      ret.password = undefined;
+      return ret;
+    },
+  },
+}
+);
+
 
 const User = mongoose.model("User", userSchema);
 
