@@ -4,9 +4,12 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const routes = require('./routers');
+const cors = require('cors');
 
 dotenv.config({ path: './config.env' });
 const app = express();
+app.use(cors());
+
 
 const PORT = process.env.PORT || 3000;
 
