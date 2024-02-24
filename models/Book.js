@@ -18,10 +18,10 @@ const BookSchema = new mongoose.Schema({
   authorId: {
     type: mongoose.Schema.ObjectId,
     required: true,
-    ref: "Authors",
+    ref: "Author",
   },
 });
 
-const Book = mongoose.model("BookModel", BookSchema, "books");
+const Book = mongoose.model("Book", BookSchema);
 
 module.exports = Book;

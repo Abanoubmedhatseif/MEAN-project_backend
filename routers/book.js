@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const bookController = require("../controllers/book");
-
+const fs = require('fs');
 const multer = require('multer')
 const path = require('path')
 
@@ -22,6 +22,13 @@ router.get("/upload", (req, res) => {
 // image is same as input name in the view file
 router.post("/upload", upload.single("image"), (req, res) => {
   res.json("image uploaded");
+})
+
+router.get("/images/:bookname", (req, res) => {
+  const imagePath = 'images/' + req.params.bookname;
+  const readStream = fs.createReadStream(imagePath);
+  res.setHeader('Content-Type', 'image/jpg');   // optional but nice to have
+  readStream.pipe(res);
 })
 
 router.get("/", async (req, res, next) => {
