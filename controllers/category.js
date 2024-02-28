@@ -1,4 +1,4 @@
-const Book = require('../Models/book');
+const Book = require('../models/book');
 const Category = require('../models/category');
 
 const createCategory = async (req, res) => {
@@ -46,8 +46,6 @@ const getCategoryById = async (req, res) => {
                     .skip(page * booksPerPage)
                     .limit(booksPerPage)
                     .exec()
-
-    // const records = await Book.find().where('categoryId').in(categoryId).exec();
 
     res.status(200).json(categoryRelatedBooks);
   } catch (error) {

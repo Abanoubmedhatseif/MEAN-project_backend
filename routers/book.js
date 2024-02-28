@@ -32,8 +32,12 @@ router.get("/images/:bookname", (req, res) => {
 })
 
 router.get("/", async (req, res, next) => {
+  
+  const page = req.query.page || 0;
+  const booksPerPage = 4;
+  
   await bookController
-    .getAllBooks()
+    .getAllBooks(page, booksPerPage)
     .then((books) =>
       books.length >= 1
         ? res.status(200).json(books)
@@ -45,9 +49,9 @@ router.get("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   await bookController
     .getOneBook(req.params.id)
-    .then((book) =>
-      book.length >= 1
-        ? res.status(200).json(book)
+    .then((bookData) =>
+    bookData
+        ? res.status(200).json(bookData)
         : res.status(404).send({ Message: "No data" }),
     )
     .catch((err) => next(err));

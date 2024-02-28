@@ -1,9 +1,48 @@
-const Book = require("../Models/book");
+const Book = require("../models/book");
+const User = require("../models/user");
 
-const getAllBooks = async () => Book.find({});
+// for USER -side routes
+const getAllBooks = async (page, booksPerPage) =>
+Book.find({})
+.select("-categoryId")
+.populate({
+  path: "authorId",
+  select: "firstName",
+})
+.skip(page * booksPerPage)
+.limit(booksPerPage);
 
-const getOneBook = async (id) => Book.find({ _id: id });
+// for USER -side routes
+const getOneBook = async (id) => {
+  const users = await User.find({});
+  let reviews = [];
+  let rates = [];
 
+  // TODO rememmber to add dates in every review.
+  users.filter( (user)=> {
+    return user.books.filter((book) => {
+      if (book.bookId == id) {
+        reviews.push({user: user.firstName, reviews: book.reviews})
+        rates.push(book.rate)
+      }
+    })
+  });
+  
+  const sum = rates.reduce((acc, rating) => acc + rating, 0);
+  const averageRating = sum / rates.length;
+  
+  const bookInfo = await Book.findOne({ _id: id })
+    .populate({
+      path: "authorId",
+      select: "firstName",
+    })
+    .populate({
+      path: "categoryId",
+      select: "categoryName",
+    });
+
+    return  {bookInfo, averageRating, reviews};
+};
 const createBook = async (data) => Book.create(data);
 
 const updateBook = async (idAndData) => {
