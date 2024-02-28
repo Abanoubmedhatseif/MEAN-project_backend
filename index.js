@@ -1,12 +1,12 @@
 /* eslint-disable import/no-unresolved */
-const express = require('express');
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
-const helmet = require('helmet');
+const express = require("express");
+const dotenv = require("dotenv");
+const mongoose = require("mongoose");
+const helmet = require("helmet");
+const routes = require("./routers");
 const cors = require('cors');
-const routes = require('./routers');
+dotenv.config({ path: "./config.env" });
 
-dotenv.config({ path: './config.env' });
 const app = express();
 app.use(cors());
 
@@ -21,6 +21,9 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(helmet());
 
+// Cross-origin resource sharing
+app.use(cors());
+
 // ROUTES
 app.use(routes);
 
@@ -29,8 +32,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ Error: err.message });
 });
 
-app.use('*', (req, res) => {
-  res.status(404).json({ Error: 'No route defined for this :(' });
+// For any non-defined routes.
+app.use("*", (req, res) => {
+  res.status(404).json({ Error: "No route defined for this :(" });
 });
 
 app.listen(PORT, () => {

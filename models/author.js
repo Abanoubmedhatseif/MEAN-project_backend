@@ -23,7 +23,7 @@ authorsSchema.pre("findOneAndUpdate", function foau(next) {
   next();
 });
 
-const Authors = mongoose.model("Authors", authorsSchema);
+const Authors = mongoose.model("Author", authorsSchema);
 
 module.exports = {
   Authors,
