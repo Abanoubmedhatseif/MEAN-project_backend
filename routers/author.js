@@ -11,4 +11,6 @@ router
   .patch('/:authorid', authorInformationConfirmation, validationresult, AuthorController.updateAuthor)
   .delete('/:authorid', AuthorController.deleteAuthor);
 
+router
+  .get('/:authorid/authorbooks', AuthorController.getAuthorBooks);
 module.exports = router;

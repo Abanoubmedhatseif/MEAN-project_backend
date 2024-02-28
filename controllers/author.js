@@ -1,4 +1,5 @@
 const { Authors } = require('../Models/author');
+const Book = require('../models/Book');
 
 const getAuthors = async (req, res) => {
   try {
@@ -60,10 +61,20 @@ const deleteAuthor = async (req, res) => {
   }
 };
 
+const getAuthorBooks = async (req, res) => {
+  try {
+    const Books = await Book.find({ authorId: req.params.authorid });
+    res.status(200).json(Books);
+  } catch (err) {
+    res.status(500).json({ errorMessage: err.message });
+  }
+};
+
 module.exports = {
   getAuthors,
   getAuthor,
   postAuthors,
   updateAuthor,
   deleteAuthor,
+  getAuthorBooks,
 };
