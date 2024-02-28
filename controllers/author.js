@@ -1,4 +1,4 @@
-const { Authors } = require("../Models/author");
+const { Authors } = require('../Models/author');
 
 const getAuthors = async (req, res) => {
   try {
@@ -11,7 +11,7 @@ const getAuthors = async (req, res) => {
 
 const getAuthor = async (req, res) => {
   try {
-    const Author = await Authors.find({ _id: req.params.authorid });
+    const Author = await Authors.findById({ _id: req.params.authorid });
     res.json(Author);
   } catch (err) {
     res.status(500).json({ errorMessage: err.message });
@@ -35,7 +35,7 @@ const updateAuthor = async (req, res) => {
     const newAuthor = await Authors.findOneAndUpdate(
       { _id: req.params.authorid },
       req.body,
-      { returnDocument: "after" },
+      { returnDocument: 'after' },
     );
     res.status(200).json({
       successMessage: 'the author updated successfully',
