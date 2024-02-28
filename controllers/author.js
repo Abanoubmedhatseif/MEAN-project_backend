@@ -1,4 +1,4 @@
-const { Authors } = require('../Models/author');
+const { Authors } = require("../models/author");
 const Book = require('../models/Book');
 
 const getAuthors = async (req, res) => {

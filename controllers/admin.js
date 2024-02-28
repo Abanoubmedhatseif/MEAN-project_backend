@@ -1,6 +1,7 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const Admin = require('../Models/admin');
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const Admin = require("../models/admin");
+
 
 const createAdminAccount = async (req, res) => {
   try {
