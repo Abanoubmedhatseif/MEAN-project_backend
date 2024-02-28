@@ -6,37 +6,30 @@ const { error } = require("console");
 const verifyToken = require("../middleware/verify-token");
 
 // for USER -side routes
-exports.Register = async (req, res) => {
+exports.Register = async (req, res, next) => {
   try {
+    console.log(req.body);
     const { firstName, lastName, userName, password } = req.body;
     const salt = await bcrypt.genSalt(10);
     const hashedpassword = await bcrypt.hash(password, salt);
 
-    if (
-      req.body.retypePassword &&
-      req.body.retypePassword === req.body.password
-    ) {
-      const newUser = {
+    if (!(req.body.retypePassword === req.body.password))
+      throw new Error("Password must be confirmed and matched")
+
+      const userData = {
         firstName,
         lastName,
         userName,
         password: hashedpassword,
       };
-      const newuser = await User.create(newUser);
+      const newUser = await User.create(userData);
+      
       res.status(201).json({
         successMessage: "the user created successfully",
-        newuser,
+        newUser,
       });
-    } else {
-      res.status(500).json({
-        errorMessage: "Password must be confirmed and matched",
-      });
-    }
   } catch (error) {
-    res.status(500).json({
-      errorMessage:
-        "error occured | check your data | username is already taken",
-    });
+    next(error)
   }
 };
 
