@@ -18,6 +18,7 @@ const {
   login,
   updateBookRate,
   getAllBooks,
+  deleteAllBooks,
   addBookReview,
 } = require("../controllers/user");
 
@@ -33,11 +34,10 @@ userRouter.get("/books/:id", getUserOneBook);
 userRouter.get("/books", verifyToken, getUserBooks);
 userRouter.post("/books/:id", verifyToken, addBook);
 
+userRouter.patch("/updateShelve/:id", verifyToken, updateBookShelve);
+userRouter.patch("/updateRate/:id", verifyToken, updateBookRate);
+userRouter.post("/addReview/:id", verifyToken, addBookReview);
 
-
-
-userRouter.patch("/updateShelve/:id", updateBookShelve);
-// userRouter.patch("/updateRate/:id", updateBookRate);
-userRouter.post("/addReview/:id", userBookReview, validationresult, addBookReview);
+userRouter.post("/delete-my-books", verifyToken, deleteAllBooks);
 
 module.exports = userRouter;

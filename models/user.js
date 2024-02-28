@@ -14,7 +14,7 @@ const bookSchema = new mongoose.Schema({
   authorId: {
     type: mongoose.Schema.ObjectId,
     required: true,
-    ref: "Authors",
+    ref: "Author",
   },
 });
 
@@ -38,19 +38,16 @@ const userSchema = new mongoose.Schema({
   },
   books: [
     {
-      book: {
-        type: bookSchema,
-        unique: true,
-      },
+      
+      bookId: mongoose.Schema.ObjectId,
 
       rate: {
         type: Number,
         default: 0,
         max: 5,
       },
-      review: {
-        type: String,
-        default: "N/A"
+      reviews: {
+        type: [String],
       },
       shelve: {
         type: String,
