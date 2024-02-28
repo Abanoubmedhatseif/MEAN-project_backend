@@ -1,15 +1,16 @@
-const router = require("express").Router();
-const { CategoryController } = require("../controllers");
+const router = require('express').Router();
+const { CategoryController } = require('../controllers');
+const { categoryNamingConfirmation, validationresult } = require('../middleware/category-validation');
 
 router
-  .route("/")
-  .post(CategoryController.createCategory)
+  .route('/')
+  .post(categoryNamingConfirmation, validationresult, CategoryController.createCategory)
   .get(CategoryController.getAllCategories);
 
 router
-  .route("/:id")
+  .route('/:id')
   .get(CategoryController.getCategoryById)
-  .patch(CategoryController.updateCategoryById)
+  .patch(categoryNamingConfirmation, validationresult, CategoryController.updateCategoryById)
   .delete(CategoryController.deleteCategoryById);
 
 module.exports = router;
