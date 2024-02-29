@@ -61,10 +61,35 @@ const deleteBook = async (id) => {
   return deletedBook;
 };
 
+const getAverageRating = async (bookId) => {
+  try {
+    const averageRating = await User.aggregate([
+      { $match: { 'books.bookId': bookId } },
+      { $unwind: '$books' },
+      { $match: { 'books.bookId': bookId } },
+      {
+        $group: {
+          _id: '$books.bookId',
+          averageRating: { $avg: '$books.rate' },
+        },
+      },
+    ]);
+    console.log(averageRating);
+
+    if (averageRating.length > 0) {
+      return averageRating[0].averageRating;
+    }
+    return null;
+  } catch (err) {
+
+  }
+};
+
 module.exports = {
   getAllBooks,
   getOneBook,
   createBook,
   updateBook,
   deleteBook,
+  getAverageRating,
 };

@@ -85,4 +85,12 @@ router.put('/rate/:id', async (req, res, next) => {
     .catch((err) => next(err));
 });
 
+router.get('/avgrate/:id', async (req, res, next) => {
+  await bookController
+    .getAverageRating(req.params.id)
+    .then((rating) => (rating
+      ? res.status(200).json({ Message: 'Done', Avg: rating })
+      : res.status(404).json({ Message: 'No rate' })));
+});
+
 module.exports = router;
