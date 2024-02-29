@@ -4,7 +4,6 @@ const multer = require('multer');
 const path = require('path');
 const bookController = require('../controllers/book');
 
-
 // router.get("/books/images/:bookPhotoName", (req, res) => {
 //   const imagePath = 'images/' + req.params.bookPhotoName;
 //   const readStream = fs.createReadStream(imagePath);
@@ -32,10 +31,7 @@ const upload = multer({ storage });
 //   res.json("image uploaded");
 // })
 
-
-router.get("/", async (req, res, next) => {
-  const page = req.query.page || 0;
-  const booksPerPage = 4;
+router.get('/', async (req, res, next) => {
   await bookController
     .getAllBooks(req.query.name)
     .then((books) => (books.length >= 1
@@ -53,16 +49,13 @@ router.get('/:id', async (req, res, next) => {
     .catch((err) => next(err));
 });
 
-router.post("/", upload.single('bookImageFile'), async (req, res, next) => {
+router.post('/', upload.single('bookImageFile'), async (req, res, next) => {
   console.log(req.body);
   await bookController
     .createBook(req.body)
-    .then((createdBook) =>
-      createdBook
-        ? res.status(200).json({ Message: "Done", Data: createdBook })
-        : res.status(404).send({ Message: "Error just occured" }),
-    ).catch((err) => next(err));
-
+    .then((createdBook) => (createdBook
+      ? res.status(200).json({ Message: 'Done', Data: createdBook })
+      : res.status(404).send({ Message: 'Error just occured' }))).catch((err) => next(err));
 });
 
 router.put('/:id', async (req, res, next) => {
@@ -90,6 +83,14 @@ router.put('/rate/:id', async (req, res, next) => {
       ? res.status(200).json({ Message: 'Done', Data: book })
       : res.status(404).send({ Message: 'No data' })))
     .catch((err) => next(err));
+});
+
+router.get('/avgrate/:id', async (req, res, next) => {
+  await bookController
+    .getAverageRating(req.params.id)
+    .then((rating) => (rating
+      ? res.status(200).json({ Message: 'Done', Avg: rating })
+      : res.status(404).json({ Message: 'No rate' })));
 });
 
 module.exports = router;
