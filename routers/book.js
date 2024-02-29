@@ -33,7 +33,7 @@ router.get('/images/:bookname', (req, res) => {
 
 router.get('/', async (req, res, next) => {
   await bookController
-    .getAllBooks()
+    .getAllBooks(req.query.name)
     .then((books) => (books.length >= 1
       ? res.status(200).json(books)
       : res.status(404).send({ Message: 'No data' })))

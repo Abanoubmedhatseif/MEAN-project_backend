@@ -2,7 +2,15 @@ const User = require('../models/user');
 const Book = require('../models/Book');
 
 // for USER -side routes
-const getAllBooks = async (page, booksPerPage) => Book.find({});
+const getAllBooks = async (queryname) => {
+  let books;
+  if (queryname) {
+    books = await Book.find({ bookName: queryname });
+  } else {
+    books = await Book.find();
+  }
+  return books;
+};
 // .select("-categoryId")
 // .populate({
 //   path: "authorId",
