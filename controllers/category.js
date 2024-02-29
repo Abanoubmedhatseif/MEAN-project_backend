@@ -15,7 +15,7 @@ const getAllCategories = async (req, res) => {
   try {
     let categories;
     if (req.query.name) {
-      categories = await Category.find({ categoryName: req.query.name });
+      categories = await Category.find({ categoryName: { $regex: req.query.name, $options: 'i' } });
     } else {
       categories = await Category.find();
     }

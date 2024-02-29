@@ -5,7 +5,7 @@ const Book = require('../models/Book');
 const getAllBooks = async (queryname) => {
   let books;
   if (queryname) {
-    books = await Book.find({ bookName: queryname });
+    books = await Book.find({ bookName: { $regex: queryname, $options: 'i' } });
   } else {
     books = await Book.find();
   }
