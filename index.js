@@ -28,6 +28,9 @@ app.use(cors());
 // ROUTES
 app.use(routes);
 
+// serve images
+app.use(express.static('Images'));
+
 // Middleware | Global Error Handler
 app.use((err, req, res, next) => {
   res.status(500).json({ errorMessage: err.message });

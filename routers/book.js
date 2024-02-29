@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
     cb(null, 'Images');
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(null, file.originalname);
   },
 });
 
@@ -47,14 +47,15 @@ router.get("/", async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   await bookController
     .getOneBook(req.params.id)
-    .then((book) => (book.length >= 1
+    .then((book) => book
       ? res.status(200).json(book)
-      : res.status(404).send({ Message: 'No data' })))
+      : res.status(404).send({ Message: 'No data' }))
     .catch((err) => next(err));
 });
 
 router.post("/", upload.single('bookImageFile'), async (req, res, next) => {
-  console.log(req.body);
+  // console.log(req.file.filename);
+  req.body.photo = req.file.filename
   await bookController
     .createBook(req.body)
     .then((createdBook) =>
@@ -91,5 +92,13 @@ router.put('/rate/:id', async (req, res, next) => {
       : res.status(404).send({ Message: 'No data' })))
     .catch((err) => next(err));
 });
+
+router.get('/book-image/:bookCoverName', (req, res, next)=>{
+  //  const imagePath = 'Images/206622.jpg';
+   const imagePath = `Images/${req.params.bookCoverName}`;
+   const readStream = fs.createReadStream(imagePath);
+    res.setHeader('Content-Type', 'image/jpg');   
+    readStream.pipe(res);
+})
 
 module.exports = router;
