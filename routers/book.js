@@ -3,6 +3,7 @@ const fs = require('fs');
 const multer = require('multer');
 const path = require('path');
 const bookController = require('../controllers/book');
+const Book = require('../models/book');
 
 // router.get("/books/images/:bookPhotoName", (req, res) => {
 //   const imagePath = 'images/' + req.params.bookPhotoName;
@@ -41,12 +42,34 @@ router.get('/', async (req, res, next) => {
 });
 
 router.get('/:id', async (req, res, next) => {
-  await bookController
-    .getOneBook(req.params.id)
-    .then((book) => (book.length >= 1
-      ? res.status(200).json(book)
-      : res.status(404).send({ Message: 'No data' })))
-    .catch((err) => next(err));
+  try {
+    const book = await Book.findById(req.params.id)
+      .populate('categoryId')
+      .populate('authorId');
+
+    if (!book) {
+      return res.status(404).json({ message: 'Book not found' });
+    }
+
+    const {
+      bookName, photo, categoryId, authorId,
+    } = book;
+    const { categoryName } = categoryId;
+    const authorName = `${authorId.firstName} ${authorId.lastName}`;
+
+    res.status(200).json({
+      book: {
+        bookName,
+        photo,
+        categoryName,
+        authorName,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      errorMessage: error.message,
+    });
+  }
 });
 
 router.post('/', upload.single('bookImageFile'), async (req, res, next) => {
