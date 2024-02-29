@@ -5,7 +5,7 @@ const getAuthors = async (req, res) => {
   try {
     let allAuthors;
     if (req.query.name) {
-      allAuthors = await Authors.find({ firstName: req.query.name });
+      allAuthors = await Authors.find({ firstName: { $regex: req.query.name, $options: 'i' } });
     } else {
       allAuthors = await Authors.find();
     }
