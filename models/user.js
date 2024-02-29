@@ -24,11 +24,12 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: "Book",
       },
-        rate: {
-          type: Number,
-          default: 0,
-          max: 5,
-        },
+
+      rate: {
+        type: Number,
+        min: 1,
+        max: 5,
+      },
         reviews: {
           type: [String],
         },

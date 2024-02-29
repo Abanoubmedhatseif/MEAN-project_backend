@@ -4,7 +4,6 @@ const User = require("../models/user");
 const Book = require("../models/Book");
 
 const { error } = require("console");
-const verifyToken = require("../middleware/verify-token");
 
 // for USER -side routes
 exports.Register = async (req, res, next) => {

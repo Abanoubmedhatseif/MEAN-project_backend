@@ -1,3 +1,4 @@
+const Book = require('../models/Book');
 // const Book = require('../models/book');
 const Category = require('../models/category');
 
@@ -13,7 +14,13 @@ const createCategory = async (req, res) => {
 // for USER -side routes
 const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
+    let categories;
+    if (req.query.name) {
+      categories = await Category.find({ categoryName: req.query.name });
+    } else {
+      categories = await Category.find();
+    }
+
     res.status(200).json(categories);
   } catch (error) {
     res.status(500).json({ errorMessage: error.message });
