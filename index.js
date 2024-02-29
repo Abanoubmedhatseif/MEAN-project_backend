@@ -14,7 +14,7 @@ app.use(cors());
 const PORT = process.env.PORT || 3000;
 
 // DB CONNECTION
-mongoose.connect(process.env.DB_LOCAL);
+mongoose.connect(process.env.DB_URL);
 
 app.set('view engine', 'ejs');
 
@@ -24,6 +24,13 @@ app.use(helmet());
 
 // Cross-origin resource sharing
 app.use(cors());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', true);
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  next();
+});
 
 // ROUTES
 app.use(routes);
