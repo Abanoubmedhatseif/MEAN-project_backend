@@ -1,4 +1,4 @@
-const Book = require('../models/book');
+const Book = require('../models/Book');
 
 const Category = require('../models/category');
 

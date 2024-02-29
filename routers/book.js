@@ -3,7 +3,7 @@ const fs = require('fs');
 const multer = require('multer');
 const path = require('path');
 const bookController = require('../controllers/book');
-const Book = require('../models/book');
+const Book = require('../models/Book');
 
 // router.get("/books/images/:bookPhotoName", (req, res) => {
 //   const imagePath = 'images/' + req.params.bookPhotoName;

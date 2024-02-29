@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const Book = require("../models/book");
+const Book = require("../models/Book");
 
 const { error } = require("console");
 
