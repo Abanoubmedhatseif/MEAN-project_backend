@@ -1,5 +1,6 @@
-const User = require("../models/user");
-const Book = require("../models/Book");
+const User = require('../models/user');
+const Book = require('../models/book');
+
 
 // for USER -side routes
 const getAllBooks = async (queryname) => {

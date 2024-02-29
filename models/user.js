@@ -1,35 +1,36 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
-  firstName: {
-    required: true,
-    type: String,
-  },
-  lastName: {
-    required: true,
-    type: String,
-  },
-  userName: {
-    required: true,
-    unique: true,
-    type: String,
-  },
-  password: {
-    required: true,
-    type: String,
-  },
-  books: [
-    {
-      bookId:{
-        type: mongoose.Schema.ObjectId,
-        ref: "Book",
-      },
-
-      rate: {
-        type: Number,
-        min: 1,
-        max: 5,
-      },
+const userSchema = new mongoose.Schema(
+  {
+    firstName: {
+      required: true,
+      type: String,
+    },
+    lastName: {
+      required: true,
+      type: String,
+    },
+    userName: {
+      required: true,
+      unique: true,
+      type: String,
+    },
+    password: {
+      required: true,
+      type: String,
+    },
+    books: [
+      {
+        bookId: {
+          type: mongoose.Schema.ObjectId,
+          ref: 'Book',
+        },
+        rate: {
+          type: Number,
+          default: 0,
+          min: 1,
+          max: 5,
+        },
         reviews: {
           type: [String],
         },
