@@ -1,47 +1,44 @@
-const User = require("../models/user");
+const User = require('../models/user');
 const Book = require('../models/Book');
 
 // for USER -side routes
-const getAllBooks = async (page, booksPerPage) =>
-Book.find({})
-.select("-categoryId")
-.populate({
-  path: "authorId",
-  select: "firstName",
-})
-.skip(page * booksPerPage)
-.limit(booksPerPage);
+const getAllBooks = async (page, booksPerPage) => Book.find({});
+// .select("-categoryId")
+// .populate({
+//   path: "authorId",
+//   select: "firstName",
+// })
+// .skip(page * booksPerPage)
+// .limit(booksPerPage);
 
 // for USER -side routes
 const getOneBook = async (id) => {
   const users = await User.find({});
-  let reviews = [];
-  let rates = [];
+  const reviews = [];
+  const rates = [];
 
   // TODO rememmber to add dates in every review.
-  users.filter( (user)=> {
-    return user.books.filter((book) => {
-      if (book.bookId == id) {
-        reviews.push({user: user.firstName, reviews: book.reviews})
-        rates.push(book.rate)
-      }
-    })
-  });
-  
+  users.filter((user) => user.books.filter((book) => {
+    if (book.bookId == id) {
+      reviews.push({ user: user.firstName, reviews: book.reviews });
+      rates.push(book.rate);
+    }
+  }));
+
   const sum = rates.reduce((acc, rating) => acc + rating, 0);
   const averageRating = sum / rates.length;
-  
+
   const bookInfo = await Book.findOne({ _id: id })
     .populate({
-      path: "authorId",
-      select: "firstName",
+      path: 'authorId',
+      select: 'firstName',
     })
     .populate({
-      path: "categoryId",
-      select: "categoryName",
+      path: 'categoryId',
+      select: 'categoryName',
     });
 
-    return  {bookInfo, averageRating, reviews};
+  return { bookInfo, averageRating, reviews };
 };
 const createBook = async (data) => Book.create(data);
 

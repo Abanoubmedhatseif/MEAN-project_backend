@@ -119,19 +119,42 @@ exports.getUserBooks = async (req, res) => {
         errorMessage: "User not found",
       });
     }
+
     const numberOfBooks = user.books.length;
     if (numberOfBooks === 0) {
       return res.status(200).json({
-        successMessage: "there's no book added yet",
+        successMessage: "There are no books added yet",
       });
     }
+
+    // Array to store book details
+    const booksWithDetails = [];
+
+    // Iterate through each book ID in the user's books array
+    for (const book of user.books) {
+      // Fetch the book details using the bookId
+      const bookDetails = await Book.findById(book.bookId);
+      if (bookDetails) {
+        // Construct book object with name, shelf, and rate
+        const bookObject = {
+          bookId:book.bookId,
+          bookName: bookDetails.bookName,
+          shelve: book.shelve,
+          rate: book.rate
+        };
+        // Push the book object to the array
+        booksWithDetails.push(bookObject);
+      }
+    }
+
     return res.status(200).json({
       "number of books": numberOfBooks,
-      "the books": user.books,
+      "the books": booksWithDetails,
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
-      errorMessage: "error occured",
+      errorMessage: "Error occurred",
     });
   }
 };
