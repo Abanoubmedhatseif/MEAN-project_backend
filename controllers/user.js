@@ -254,27 +254,7 @@ exports.updateBookRate = async (req, res, next) => {
 
 
 
-// exports.updateBookRate = async (req, res, next) => {
-//   try {
-//     const user = await User.findById(req.body._id);
-//     const newRate = req.body.rate;
 
-//     const targetBook = user.books.find(
-//       (book) => book.bookId == req.params.id ?? book.book
-//     );
-//     if (!targetBook) throw new Error("Unknown book!");
-
-//     targetBook.rate = newRate;
-//     await user.save();
-
-//     return res.status(200).json({
-//       successMessage: "Book rate updated successfully",
-//       updatedBook: targetBook,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
 // for USER -side routes
 exports.addBookReview = async (req, res) => {
