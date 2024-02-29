@@ -4,6 +4,14 @@ const multer = require('multer');
 const path = require('path');
 const bookController = require('../controllers/book');
 
+
+// router.get("/books/images/:bookPhotoName", (req, res) => {
+//   const imagePath = 'images/' + req.params.bookPhotoName;
+//   const readStream = fs.createReadStream(imagePath);
+//   res.setHeader('Content-Type', 'image/jpg');   // optional but nice to have
+//   readStream.pipe(res);
+// })
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'Images');
@@ -15,23 +23,19 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.get('/upload', (req, res) => {
-  res.render('form');
-});
+// router.get("/upload", (req, res) => {
+//   res.render("form");
+// })
 
-// image is same as input name in the view file
-router.post('/upload', upload.single('image'), (req, res) => {
-  res.json('image uploaded');
-});
+// // image is same as input name in the view file
+// router.post("/upload", upload.single("image"), (req, res) => {
+//   res.json("image uploaded");
+// })
 
-router.get('/images/:bookname', (req, res) => {
-  const imagePath = `images/${req.params.bookname}`;
-  const readStream = fs.createReadStream(imagePath);
-  res.setHeader('Content-Type', 'image/jpg'); // optional but nice to have
-  readStream.pipe(res);
-});
 
-router.get('/', async (req, res, next) => {
+router.get("/", async (req, res, next) => {
+  const page = req.query.page || 0;
+  const booksPerPage = 4;
   await bookController
     .getAllBooks()
     .then((books) => (books.length >= 1
@@ -49,13 +53,16 @@ router.get('/:id', async (req, res, next) => {
     .catch((err) => next(err));
 });
 
-router.post('/', async (req, res, next) => {
+router.post("/", upload.single('bookImageFile'), async (req, res, next) => {
+  console.log(req.body);
   await bookController
     .createBook(req.body)
-    .then((createdBook) => (createdBook
-      ? res.status(200).json({ Message: 'Done', Data: createdBook })
-      : res.status(404).send({ Message: 'Error just occured' })))
-    .catch((err) => next(err));
+    .then((createdBook) =>
+      createdBook
+        ? res.status(200).json({ Message: "Done", Data: createdBook })
+        : res.status(404).send({ Message: "Error just occured" }),
+    ).catch((err) => next(err));
+
 });
 
 router.put('/:id', async (req, res, next) => {
