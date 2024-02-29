@@ -148,22 +148,13 @@ async function getAverageRatingsOfBook(id) {
 
 exports.getUserBooks = async (req, res, next) => {
   try {
-    // const page = req.query.page || 0;
-    // const booksPerPage = 4;
+    const user = await User.findById(req.params.id).select("books");
+    if (!user) {
+      return res.status(404).json({
+        errorMessage: "User not found",
+      });
+    }
 
-    const user = await User.findById(req.body._id)
-                      .select("books").populate({
-                        path: "books.bookId",
-                        select: 'photo bookName', 
-                        populate: {
-                          path: 'authorId',
-                          select: 'firstName'
-                        } 
-                      })//.lean()
-                      // .skip(page * booksPerPage)
-                      // .limit(4);
-
-                    
     const numberOfBooks = user.books.length;
     // for (const book of user.books) {
     //   console.log(book.bookId._id);
@@ -172,15 +163,40 @@ exports.getUserBooks = async (req, res, next) => {
     
 
     if (numberOfBooks === 0) {
-      throw new Error("No");
+      return res.status(200).json({
+        successMessage: "There are no books added yet",
+      });
+    }
+
+    // Array to store book details
+    const booksWithDetails = [];
+
+    // Iterate through each book ID in the user's books array
+    for (const book of user.books) {
+      // Fetch the book details using the bookId
+      const bookDetails = await Book.findById(book.bookId);
+      if (bookDetails) {
+        // Construct book object with name, shelf, and rate
+        const bookObject = {
+          bookId:book.bookId,
+          bookName: bookDetails.bookName,
+          shelve: book.shelve,
+          rate: book.rate
+        };
+        // Push the book object to the array
+        booksWithDetails.push(bookObject);
+      }
     }
 
     return res.status(200).json({
-      "count_books": numberOfBooks,
-      "user_books": user.books,
+      "number of books": numberOfBooks,
+      "the books": booksWithDetails,
     });
   } catch (error) {
-    next(error);
+    console.error(error);
+    return res.status(500).json({
+      errorMessage: "Error occurred",
+    });
   }
 };
 
