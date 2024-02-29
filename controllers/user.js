@@ -113,23 +113,6 @@ exports.getUserOneBook = async (req, res, next) => {
   }
 };
 
-// async function getAverageRatingsOfBook(id) {
-//   const users = await User.find({});
-//   let rates = [];
-
-//   users.for( (user)=> {
-//     return user.books.filter((book) => {
-//       if (book.bookId == id) {
-//         rates.push(book.rate)
-//       }
-//     })
-//   });
-  
-//   const sum = rates.reduce((acc, rating) => acc + rating, 0);
-//   const averageRating = rates.length > 0 ? sum / rates.length : 0;
-//   return averageRating;
-// }
-
 async function getAverageRatingsOfBook(id) {
   const users = await User.find({});
   let reviews = [];
@@ -250,14 +233,14 @@ exports.updateBookShelve = async (req, res, next) => {
 exports.updateBookRate = async (req, res, next) => {
   try {
     const user = await User.findById(req.body._id);
-    const newRate = req.body.rate;
+    const rate = req.body.rate;
 
     const targetBook = user.books.find(
       (book) => book.bookId == req.params.id ?? book.book
     );
     if (!targetBook) throw new Error("Unknown book!");
 
-    targetBook.rate = newRate;
+    targetBook.rate = rate;
     await user.save();
 
     return res.status(200).json({
@@ -268,6 +251,10 @@ exports.updateBookRate = async (req, res, next) => {
     next(error);
   }
 };
+
+
+
+
 
 // for USER -side routes
 exports.addBookReview = async (req, res) => {

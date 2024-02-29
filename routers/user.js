@@ -36,7 +36,7 @@ userRouter.get('/:id/books', /* verifyToken, */ getUserBooks);
 userRouter.post('/books/:id', /* verifyToken, */ addBook);
 
 userRouter.patch('/updateShelve/:id', /* verifyToken, */ updateBookShelve);
-userRouter.patch('/updateRate/:id', verifyToken, updateBookRate);
+userRouter.patch('/updateRate/:id', /* verifyToken */ updateBookRate);
 userRouter.post('/addReview/:id', verifyToken, addBookReview);
 
 userRouter.post('/delete-my-books', verifyToken, deleteAllBooks);
