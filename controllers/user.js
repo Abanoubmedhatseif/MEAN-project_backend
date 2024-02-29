@@ -4,7 +4,11 @@ const User = require("../models/user");
 const Book = require("../models/Book");
 
 const { error } = require("console");
-const verifyToken = require("../middleware/verify-token");
+
+exports.getAllUsers = async (req, res, next) => {
+  const users = await User.find();
+  res.status(200).json(users)
+}
 
 // for USER -side routes
 exports.Register = async (req, res, next) => {
@@ -154,12 +158,10 @@ exports.getUserBooks = async (req, res, next) => {
         errorMessage: "User not found",
       });
     }
-
+    if (req.query.shelve) {
+      user.books = user.books.filter(book => book.shelve === req.query.shelve);
+    }
     const numberOfBooks = user.books.length;
-    // for (const book of user.books) {
-    //   console.log(book.bookId._id);
-    //   book.avg_rate = await getAverageRatingsOfBook(book.bookId._id)
-    // }
     
 
     if (numberOfBooks === 0) {
@@ -168,22 +170,17 @@ exports.getUserBooks = async (req, res, next) => {
       });
     }
 
-    // Array to store book details
     const booksWithDetails = [];
 
-    // Iterate through each book ID in the user's books array
     for (const book of user.books) {
-      // Fetch the book details using the bookId
       const bookDetails = await Book.findById(book.bookId);
       if (bookDetails) {
-        // Construct book object with name, shelf, and rate
         const bookObject = {
           bookId:book.bookId,
           bookName: bookDetails.bookName,
           shelve: book.shelve,
           rate: book.rate
         };
-        // Push the book object to the array
         booksWithDetails.push(bookObject);
       }
     }
