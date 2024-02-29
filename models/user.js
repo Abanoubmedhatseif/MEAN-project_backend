@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema(
         rate: {
           type: Number,
           default: 0,
+          min: 1,
           max: 5,
         },
         reviews: {
