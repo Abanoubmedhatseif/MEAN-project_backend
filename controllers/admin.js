@@ -1,7 +1,6 @@
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const Admin = require("../models/admin");
-
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const Admin = require('../models/admin');
 
 const createAdminAccount = async (req, res) => {
   try {
@@ -32,12 +31,12 @@ const loginAdmin = async (req, res) => {
     const admin = await Admin.findOne({ userName });
 
     if (!admin) {
-      res.status(401).json({ error: 'Invalid username or password' });
+      res.status(401).json({ errorMessage: 'Invalid username or password' });
     }
 
     const passwordMatch = await bcrypt.compare(password, admin.password);
     if (!passwordMatch) {
-      res.status(401).json({ error: 'Invalid username or password' });
+      res.status(401).json({ errorMessage: 'Invalid username or password' });
     }
 
     // eslint-disable-next-line no-underscore-dangle
