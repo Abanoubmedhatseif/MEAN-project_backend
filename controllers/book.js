@@ -1,7 +1,6 @@
 const User = require('../models/user');
 const Book = require('../models/book');
 
-
 // for USER -side routes
 const getAllBooks = async (queryname) => {
   let books;
@@ -27,14 +26,12 @@ const getOneBook = async (id) => {
   const rates = [];
 
   // TODO rememmber to add dates in every review.
-  users.filter((user) => {
-    return user.books.filter((book) => {
-      if (book.bookId == id) {
-        reviews.push({ user: user.firstName, reviews: book.reviews });
-        rates.push(book.rate);
-      }
-    });
-  });
+  users.filter((user) => user.books.filter((book) => {
+    if (book.bookId == id) {
+      reviews.push({ user: user.firstName, reviews: book.reviews });
+      rates.push(book.rate);
+    }
+  }));
 
   const sum = rates.reduce((acc, rating) => acc + rating, 0);
   const averageRating = sum / rates.length;

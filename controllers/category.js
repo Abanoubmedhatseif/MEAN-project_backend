@@ -1,4 +1,4 @@
-const Book = require('../models/Book')
+const Book = require('../models/book');
 const Category = require('../models/category');
 
 const createCategory = async (req, res) => {
@@ -26,8 +26,8 @@ const getAllCategories = async (req, res) => {
   }
 };
 
-//for USER -side routes
-//get books with authorNames by categoryId (filtering books by category)
+// for USER -side routes
+// get books with authorNames by categoryId (filtering books by category)
 const getCategoryById = async (req, res) => {
   try {
     const page = req.query.page || 0;
@@ -91,7 +91,6 @@ const updateCategoryById = async (req, res) => {
     res.status(500).json({ errorMessage: error.message });
   }
 };
-
 
 // const updateCategoryById = async (req, res) => {
 //   try {
