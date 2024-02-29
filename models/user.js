@@ -1,23 +1,5 @@
 const mongoose = require("mongoose");
 
-const bookSchema = new mongoose.Schema({
-  photo: String,
-  bookName: {
-    type: String,
-    required: true,
-  },
-  categoryId: {
-    type: mongoose.Schema.ObjectId,
-    required: true,
-    ref: "Category",
-  },
-  authorId: {
-    type: mongoose.Schema.ObjectId,
-    required: true,
-    ref: "Author",
-  },
-});
-
 const userSchema = new mongoose.Schema({
   firstName: {
     required: true,
@@ -39,7 +21,10 @@ const userSchema = new mongoose.Schema({
   books: [
     {
       
-      bookId: mongoose.Schema.ObjectId,
+      bookId:{
+        type: mongoose.Schema.ObjectId,
+        ref: "Book",
+      },
 
       rate: {
         type: Number,

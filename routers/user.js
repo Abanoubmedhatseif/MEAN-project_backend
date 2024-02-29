@@ -31,7 +31,7 @@ userRouter.get("/", getAllBooks);
 userRouter.get("/books/:id", getUserOneBook);
 
 // Protected for registered users only
-userRouter.get("/books", verifyToken, getUserBooks);
+userRouter.post("/books", verifyToken, getUserBooks);
 userRouter.post("/books/:id", verifyToken, addBook);
 
 userRouter.patch("/updateShelve/:id", verifyToken, updateBookShelve);
