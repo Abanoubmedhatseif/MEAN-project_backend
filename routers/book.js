@@ -37,7 +37,7 @@ router.get("/", async (req, res, next) => {
   const page = req.query.page || 0;
   const booksPerPage = 4;
   await bookController
-    .getAllBooks()
+    .getAllBooks(req.query.name)
     .then((books) => (books.length >= 1
       ? res.status(200).json(books)
       : res.status(404).send({ Message: 'No data' })))

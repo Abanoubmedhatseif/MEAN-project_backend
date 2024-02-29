@@ -1,9 +1,14 @@
-const { Authors } = require("../models/author");
+const { Authors } = require('../models/author');
 const Book = require('../models/Book');
 
 const getAuthors = async (req, res) => {
   try {
-    const allAuthors = await Authors.find();
+    let allAuthors;
+    if (req.query.name) {
+      allAuthors = await Authors.find({ firstName: req.query.name });
+    } else {
+      allAuthors = await Authors.find();
+    }
     res.json(allAuthors);
   } catch (err) {
     res.status(500).json({ errorMessage: err.message });
