@@ -9,7 +9,7 @@ router
 
 router
   .route('/:id')
-  .get(CategoryController.getCategoryById)
+  // .get(CategoryController.getCategoryById)
   .patch(categoryNamingConfirmation, validationresult, CategoryController.updateCategoryById)
   .delete(CategoryController.deleteCategoryById);
 

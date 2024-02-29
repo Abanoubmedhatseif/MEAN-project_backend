@@ -1,4 +1,5 @@
 const Book = require('../models/Book');
+// const Book = require('../models/book');
 const Category = require('../models/category');
 
 const createCategory = async (req, res) => {
@@ -22,36 +23,36 @@ const getAllCategories = async (req, res) => {
 
 // for USER -side routes
 // get books with authorNames by categoryId (filtering books by category)
-const getCategoryById = async (req, res) => {
-  try {
-    const page = req.query.page || 0;
-    const booksPerPage = 4;
+// const getCategoryById = async (req, res) => {
+//   try {
+//     const page = req.query.page || 0;
+//     const booksPerPage = 4;
 
-    const targetCategoryId = req.params.id;
-    const category = await Category.findById(targetCategoryId);
+//     const targetCategoryId = req.params.id;
+//     const category = await Category.findById(targetCategoryId);
 
-    if (!category) {
-      return res.status(404).json({ errorMessage: 'Sorry !!, A category with this ID was not found' });
-    }
+//     if (!category) {
+//       return res.status(404).json({ errorMessage: 'Sorry !!, A category with this ID was not found' });
+//     }
 
-    const categoryRelatedBooks = await Book.find({ categoryId: targetCategoryId })
-                    .populate({
-                      path: 'categoryId',
-                      select: 'categoryName'
-                    })
-                    .populate({
-                      path: 'authorId',
-                      select: 'firstName'
-                    })
-                    .skip(page * booksPerPage)
-                    .limit(booksPerPage)
-                    .exec()
+//     const categoryRelatedBooks = await Book.find({ categoryId: targetCategoryId })
+//       .populate({
+//         path: 'categoryId',
+//         select: 'categoryName',
+//       })
+//       .populate({
+//         path: 'authorId',
+//         select: 'firstName',
+//       })
+//       .skip(page * booksPerPage)
+//       .limit(booksPerPage)
+//       .exec();
 
-    res.status(200).json(categoryRelatedBooks);
-  } catch (error) {
-    res.status(500).json({ errorMessage: error.message });
-  }
-};
+//     res.status(200).json(categoryRelatedBooks);
+//   } catch (error) {
+//     res.status(500).json({ errorMessage: error.message });
+//   }
+// };
 
 const deleteCategoryById = async (req, res) => {
   try {
@@ -114,7 +115,7 @@ const updateCategoryById = async (req, res) => {
 module.exports = {
   getAllCategories,
   createCategory,
-  getCategoryById,
+  // getCategoryById,
   deleteCategoryById,
   updateCategoryById,
 };

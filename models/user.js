@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -20,7 +20,6 @@ const userSchema = new mongoose.Schema({
   },
   books: [
     {
-      
       bookId:{
         type: mongoose.Schema.ObjectId,
         ref: "Book",
@@ -28,30 +27,30 @@ const userSchema = new mongoose.Schema({
 
       rate: {
         type: Number,
+        min: 1,
         max: 5,
       },
-      reviews: {
-        type: [String],
+        reviews: {
+          type: [String],
+        },
+        shelve: {
+          type: String,
+          default: 'want to read',
+          enum: ['read', 'reading', 'want to read'],
+        },
       },
-      shelve: {
-        type: String,
-        default: "want to read",
-        enum: ["read", "reading", "want to read"],
+    ],
+  },
+  {
+    toJSON: {
+      transform: (doc, ret) => {
+        ret.password = undefined;
+        return ret;
       },
-    },
-  ],
-},
-{
-  toJSON: {
-    transform: (doc, ret) => {
-      ret.password = undefined;
-      return ret;
     },
   },
-}
 );
 
-
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

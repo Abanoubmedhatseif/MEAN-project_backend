@@ -44,6 +44,7 @@ exports.login = async (req, res, next) => {
     else {
       const payload = {
         _id: user._id,
+        role:'user'
       };
       jwt.sign(
         payload,

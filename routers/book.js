@@ -1,8 +1,8 @@
-const router = require("express").Router();
-const bookController = require("../controllers/book");
+const router = require('express').Router();
 const fs = require('fs');
-const multer = require('multer')
-const path = require('path')
+const multer = require('multer');
+const path = require('path');
+const bookController = require('../controllers/book');
 
 
 // router.get("/books/images/:bookPhotoName", (req, res) => {
@@ -14,14 +14,14 @@ const path = require('path')
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'Images')
+    cb(null, 'Images');
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname))
-  }
-})
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
 
-const upload = multer({ storage })
+const upload = multer({ storage });
 
 // router.get("/upload", (req, res) => {
 //   res.render("form");
@@ -37,28 +37,23 @@ router.get("/", async (req, res, next) => {
   const page = req.query.page || 0;
   const booksPerPage = 4;
   await bookController
-    .getAllBooks(page, booksPerPage)
-    .then((books) =>
-      books.length >= 1
-        ? res.status(200).json(books)
-        : res.status(404).send({ Message: "No data" }),
-    )
+    .getAllBooks()
+    .then((books) => (books.length >= 1
+      ? res.status(200).json(books)
+      : res.status(404).send({ Message: 'No data' })))
     .catch((err) => next(err));
 });
 
-router.get("/:id", async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   await bookController
     .getOneBook(req.params.id)
-    .then((bookData) =>
-    bookData
-        ? res.status(200).json(bookData)
-        : res.status(404).send({ Message: "No data" }),
-    )
+    .then((book) => (book.length >= 1
+      ? res.status(200).json(book)
+      : res.status(404).send({ Message: 'No data' })))
     .catch((err) => next(err));
 });
 
 router.post("/", upload.single('bookImageFile'), async (req, res, next) => {
-
   console.log(req.body);
   await bookController
     .createBook(req.body)
@@ -70,37 +65,30 @@ router.post("/", upload.single('bookImageFile'), async (req, res, next) => {
 
 });
 
-
-router.put("/:id", async (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
   await bookController
     .updateBook({ id: req.params.id, data: req.body })
-    .then((book) =>
-      book
-        ? res.status(200).json({ Message: "Done", Data: book })
-        : res.status(404).send({ Message: "No data" }),
-    )
+    .then((book) => (book
+      ? res.status(200).json({ Message: 'Done', Data: book })
+      : res.status(404).send({ Message: 'No data' })))
     .catch((err) => next(err));
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
   await bookController
     .deleteBook(req.params.id)
-    .then((deleted) =>
-      deleted
-        ? res.status(200).json({ Message: "Done | Deleted", Data: deleted })
-        : res.status(404).send({ Message: "No data" }),
-    )
+    .then((deleted) => (deleted
+      ? res.status(200).json({ Message: 'Done | Deleted', Data: deleted })
+      : res.status(404).send({ Message: 'No data' })))
     .catch((err) => next(err));
 });
 
-router.put("/rate/:id", async (req, res, next) => {
+router.put('/rate/:id', async (req, res, next) => {
   await bookController
     .updateBookRates({ id: req.params.id, data: req.body })
-    .then((book) =>
-      book
-        ? res.status(200).json({ Message: "Done", Data: book })
-        : res.status(404).send({ Message: "No data" }),
-    )
+    .then((book) => (book
+      ? res.status(200).json({ Message: 'Done', Data: book })
+      : res.status(404).send({ Message: 'No data' })))
     .catch((err) => next(err));
 });
 
