@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const BookSchema = new mongoose.Schema({
   photo: String,
@@ -12,16 +12,16 @@ const BookSchema = new mongoose.Schema({
   categoryId: {
     type: mongoose.Schema.ObjectId,
     required: true,
-    ref: "Category",
+    ref: 'Category',
   },
 
   authorId: {
     type: mongoose.Schema.ObjectId,
     required: true,
-    ref: "Author",
+    ref: 'Author',
   },
 });
 
-const Book = mongoose.model("Book", BookSchema);
+const Book = mongoose.model('Book', BookSchema);
 
 module.exports = Book;
