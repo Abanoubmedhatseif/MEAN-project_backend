@@ -20,13 +20,15 @@ const {
   getAllBooks,
   deleteAllBooks,
   addBookReview,
+  getAllUsers,
 } = require('../controllers/user');
 
+userRouter.get('/', getAllUsers);
 userRouter.post('/register', userRegisterValidation, validationresult, Register);
 userRouter.post('/login', userLoginValidation, validationresult, login);
 
 // Not Protected for non-registered users
-userRouter.get('/', getAllBooks);
+userRouter.get('/books', getAllBooks);
 userRouter.get('/books/:id', getUserOneBook);
 
 // Protected for registered users only
