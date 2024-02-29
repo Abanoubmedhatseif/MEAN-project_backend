@@ -1,11 +1,12 @@
 /* eslint-disable import/no-unresolved */
-const express = require("express");
-const dotenv = require("dotenv");
-const mongoose = require("mongoose");
-const helmet = require("helmet");
-const routes = require("./routers");
+const express = require('express');
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+const helmet = require('helmet');
 const cors = require('cors');
-dotenv.config({ path: "./config.env" });
+const routes = require('./routers');
+
+dotenv.config({ path: './config.env' });
 
 const app = express();
 app.use(cors());
@@ -29,12 +30,12 @@ app.use(routes);
 
 // Middleware | Global Error Handler
 app.use((err, req, res, next) => {
-  res.status(500).json({ Error: err.message });
+  res.status(500).json({ errorMessage: err.message });
 });
 
 // For any non-defined routes.
-app.use("*", (req, res) => {
-  res.status(404).json({ Error: "No route defined for this :(" });
+app.use('*', (req, res) => {
+  res.status(404).json({ Error: 'No route defined for this :(' });
 });
 
 app.listen(PORT, () => {
