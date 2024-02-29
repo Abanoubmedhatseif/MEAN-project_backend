@@ -4,7 +4,6 @@ const User = require("../models/user");
 const Book = require("../models/book");
 
 const { error } = require("console");
-const verifyToken = require("../middleware/verify-token");
 
 exports.getAllUsers = async (req, res, next) => {
   const users = await User.find();
